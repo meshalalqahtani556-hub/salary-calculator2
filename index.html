@@ -232,6 +232,80 @@ res2.innerHTML=`
 localStorage.setItem("loan",res2.innerHTML);
 }
 </script>
+<script>
+// الوضع الليلي
+function toggle(){
+    document.body.classList.toggle("light");
+    localStorage.setItem("mode", document.body.classList.contains("light"));
+}
 
+window.onload = () => {
+    if(localStorage.getItem("mode") === "true"){
+        document.body.classList.add("light");
+    }
+
+    // تعريف العناصر
+    window.salaryDiv = document.getElementById("salary");
+    window.loanDiv = document.getElementById("loan");
+}
+
+// التبويبات
+function tab(x){
+    salaryDiv.classList.add("hidden");
+    loanDiv.classList.add("hidden");
+
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+    document.getElementById(x).classList.remove("hidden");
+
+    if(x==="salary"){
+        document.querySelectorAll(".tab")[0].classList.add("active");
+    } else {
+        document.querySelectorAll(".tab")[1].classList.add("active");
+    }
+}
+
+// حاسبة الراتب
+function salary(){
+    let b = +document.getElementById("basic").value || 0;
+    let h = +document.getElementById("house").value || 0;
+    let t = +document.getElementById("trans").value || 0;
+    let natVal = document.getElementById("nat").value;
+
+    let total = b + h + t;
+    let ins = natVal === "sa" ? b * 0.1 : b * 0.02;
+    let net = total - ins;
+
+    document.getElementById("res1").innerHTML = `
+    <div class="box">💵 ${total} ريال</div>
+    <div class="box">🏦 ${ins.toFixed(0)} تأمينات</div>
+    <div class="box">✅ ${net.toFixed(0)} صافي</div>
+    `;
+
+    localStorage.setItem("salary", document.getElementById("res1").innerHTML);
+}
+
+// حاسبة القروض
+function loan(){
+    let P = +document.getElementById("amount").value || 0;
+    let r = (+document.getElementById("rate").value || 0)/100/12;
+    let n = (+document.getElementById("years").value || 0)*12;
+
+    if(!P || !r || !n){
+        document.getElementById("res2").innerHTML="⚠️ أدخل البيانات";
+        return;
+    }
+
+    let m = (P*r)/(1-Math.pow(1+r,-n));
+    let total = m*n;
+
+    document.getElementById("res2").innerHTML = `
+    <div class="box">💳 ${m.toFixed(0)} شهري</div>
+    <div class="box">📊 ${total.toFixed(0)} إجمالي</div>
+    `;
+
+    localStorage.setItem("loan", document.getElementById("res2").innerHTML);
+}
+</script>
 </body>
 </html>
