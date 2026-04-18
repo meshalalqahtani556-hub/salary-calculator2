@@ -1,259 +1,235 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head> <meta name="google-site-verification" content="Jp7KJkyYdz9b6FByVIbtbc2gIRtY2Erj6a1uGVEnLfg" />
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حاسبة الراتب والقروض</title>
+<title>الحاسبة الذكية</title>
 
 <style>
 :root{
-    --main:#4f46e5;
-    --bg:#f3f4f6;
-    --card:#ffffff;
-    --text:#111;
+--bg:#0f172a;
+--card:#1e293b;
+--accent:#6366f1;
+--text:#fff;
 }
 
-body.dark{
-    --bg:#0f172a;
-    --card:#1e293b;
-    --text:#fff;
+body.light{
+--bg:#f3f4f6;
+--card:#fff;
+--text:#111;
 }
 
 body{
-    margin:0;
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition:0.3s;
+margin:0;
+font-family:sans-serif;
+background:var(--bg);
+color:var(--text);
+transition:.3s;
 }
 
-/* كرت التطبيق */
+/* App */
 .app{
-    max-width:420px;
-    margin:40px auto;
-    background:var(--card);
-    border-radius:20px;
-    padding:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+max-width:420px;
+margin:30px auto;
+padding:20px;
 }
 
-/* العنوان */
+/* Card */
+.card{
+background:var(--card);
+padding:20px;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,.3);
+backdrop-filter: blur(10px);
+}
+
+/* Header */
 .header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
 }
 
-.title{
-    font-size:20px;
-    font-weight:bold;
-}
+.title{font-size:18px;font-weight:bold}
 
-.toggle{
-    cursor:pointer;
-    font-size:18px;
-}
+.toggle{cursor:pointer}
 
 /* Tabs */
 .tabs{
-    display:flex;
-    background:#e5e7eb;
-    border-radius:12px;
-    padding:5px;
-    margin-bottom:15px;
-}
-
-body.dark .tabs{
-    background:#334155;
+display:flex;
+background:rgba(255,255,255,.1);
+border-radius:12px;
+padding:4px;
+margin-bottom:15px;
 }
 
 .tab{
-    flex:1;
-    text-align:center;
-    padding:8px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:0.3s;
+flex:1;
+text-align:center;
+padding:8px;
+border-radius:10px;
+cursor:pointer;
 }
 
 .tab.active{
-    background:var(--main);
-    color:white;
+background:var(--accent);
 }
 
 /* Inputs */
 input,select{
-    width:100%;
-    padding:12px;
-    margin:6px 0;
-    border-radius:12px;
-    border:none;
-    background:#f1f5f9;
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:12px;
+background:rgba(255,255,255,.1);
+color:var(--text);
 }
 
-body.dark input,body.dark select{
-    background:#334155;
-    color:white;
-}
-
-/* زر */
+/* Button */
 button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:linear-gradient(45deg,#6366f1,#4f46e5);
-    color:white;
-    font-size:16px;
-    margin-top:10px;
-    cursor:pointer;
-    transition:0.3s;
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#6366f1,#8b5cf6);
+color:white;
+margin-top:10px;
+cursor:pointer;
 }
 
-button:hover{
-    transform:scale(1.03);
-}
-
-/* النتيجة */
+/* Results */
 .result{
-    margin-top:15px;
-    padding:15px;
-    border-radius:12px;
-    background:#f8fafc;
-    animation:fade 0.3s;
+margin-top:15px;
+display:grid;
+gap:10px;
 }
 
-body.dark .result{
-    background:#334155;
+.box{
+background:rgba(255,255,255,.1);
+padding:10px;
+border-radius:10px;
+text-align:center;
 }
 
-@keyframes fade{
-    from{opacity:0; transform:translateY(10px)}
-    to{opacity:1; transform:translateY(0)}
-}
-
-/* اخفاء */
+/* hidden */
 .hidden{display:none}
-
-/* إعلان */
-.ads{
-    margin-top:15px;
-    padding:10px;
-    text-align:center;
-    border-radius:10px;
-    background:#e5e7eb;
-}
-
-body.dark .ads{
-    background:#334155;
-}
 </style>
 </head>
 
 <body>
 
 <div class="app">
+<div class="card">
 
 <div class="header">
-    <div class="title">💰 الحاسبة الذكية</div>
-    <div class="toggle" onclick="toggleDark()">🌙</div>
+<div class="title">⚡ الحاسبة الذكية</div>
+<div class="toggle" onclick="toggle()">🌙</div>
 </div>
 
 <div class="tabs">
-    <div class="tab active" onclick="showTab('salary')">راتب</div>
-    <div class="tab" onclick="showTab('loan')">قرض</div>
+<div class="tab active" onclick="tab('salary')">راتب</div>
+<div class="tab" onclick="tab('loan')">قرض</div>
 </div>
 
-<!-- الراتب -->
+<!-- salary -->
 <div id="salary">
-    <select id="nat">
-        <option value="sa">سعودي</option>
-        <option value="non">غير سعودي</option>
-    </select>
+<select id="nat">
+<option value="sa">سعودي</option>
+<option value="non">غير سعودي</option>
+</select>
 
-    <input type="number" id="basic" placeholder="الراتب الأساسي">
-    <input type="number" id="house" placeholder="بدل السكن">
-    <input type="number" id="trans" placeholder="بدل النقل">
+<input id="basic" placeholder="الراتب">
+<input id="house" placeholder="بدل سكن">
+<input id="trans" placeholder="نقل">
 
-    <button onclick="calcSalary()">احسب</button>
+<button onclick="salary()">احسب</button>
 
-    <div class="result" id="resSalary">✨ النتيجة هنا</div>
+<div class="result" id="res1"></div>
 </div>
 
-<!-- القروض -->
+<!-- loan -->
 <div id="loan" class="hidden">
-    <input type="number" id="amount" placeholder="مبلغ القرض">
-    <input type="number" id="rate" placeholder="الفائدة %">
-    <input type="number" id="years" placeholder="عدد السنوات">
+<input id="amount" placeholder="مبلغ القرض">
+<input id="rate" placeholder="الفائدة %">
+<input id="years" placeholder="سنوات">
 
-    <button onclick="calcLoan()">احسب</button>
+<button onclick="loan()">احسب</button>
 
-    <div class="result" id="resLoan">✨ النتيجة هنا</div>
+<div class="result" id="res2"></div>
 </div>
 
-<div class="ads">📢 إعلان</div>
-
+</div>
 </div>
 
 <script>
-// Dark mode
-function toggleDark(){
-    document.body.classList.toggle("dark");
+function toggle(){
+document.body.classList.toggle("light");
+localStorage.setItem("mode",document.body.classList.contains("light"));
 }
 
-// Tabs
-function showTab(tab){
-    document.getElementById("salary").classList.add("hidden");
-    document.getElementById("loan").classList.add("hidden");
-
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-
-    document.getElementById(tab).classList.remove("hidden");
-
-    if(tab==="salary"){
-        document.querySelectorAll(".tab")[0].classList.add("active");
-    }else{
-        document.querySelectorAll(".tab")[1].classList.add("active");
-    }
+window.onload=()=>{
+if(localStorage.getItem("mode")==="true"){
+document.body.classList.add("light");
+}
 }
 
-// Salary
-function calcSalary(){
-    let nat = nat.value;
-    let basic = +document.getElementById("basic").value || 0;
-    let house = +document.getElementById("house").value || 0;
-    let trans = +document.getElementById("trans").value || 0;
+// tabs
+function tab(x){
+salaryDiv.classList.add("hidden");
+loanDiv.classList.add("hidden");
 
-    let total = basic + house + trans;
-    let ins = nat==="sa"? basic*0.10 : basic*0.02;
-    let net = total - ins;
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 
-    resSalary.innerHTML = `
-    💵 ${total} ريال <br>
-    🏦 ${ins} تأمينات <br>
-    ✅ ${net} صافي
-    `;
+document.getElementById(x).classList.remove("hidden");
+
+if(x==="salary"){
+document.querySelectorAll(".tab")[0].classList.add("active");
+}else{
+document.querySelectorAll(".tab")[1].classList.add("active");
+}
 }
 
-// Loan
-function calcLoan(){
-    let P = +amount.value || 0;
-    let r = (+rate.value || 0)/100/12;
-    let n = (+years.value || 0)*12;
+// salary calc
+function salary(){
+let b=+basic.value||0;
+let h=+house.value||0;
+let t=+trans.value||0;
+let nat=nat.value;
 
-    if(!P||!r||!n){
-        resLoan.innerHTML="⚠️ أدخل البيانات";
-        return;
-    }
+let total=b+h+t;
+let ins=nat==="sa"?b*0.1:b*0.02;
+let net=total-ins;
 
-    let m = (P*r)/(1-Math.pow(1+r,-n));
-    let total = m*n;
+res1.innerHTML=`
+<div class="box">💵 ${total} ريال</div>
+<div class="box">🏦 ${ins} تأمينات</div>
+<div class="box">✅ ${net} صافي</div>
+`;
 
-    resLoan.innerHTML = `
-    💳 ${m.toFixed(0)} ريال / شهر <br>
-    📊 ${total.toFixed(0)} الإجمالي
-    `;
+localStorage.setItem("salary",res1.innerHTML);
+}
+
+// loan calc
+function loan(){
+let P=+amount.value||0;
+let r=(+rate.value||0)/100/12;
+let n=(+years.value||0)*12;
+
+if(!P||!r||!n){
+res2.innerHTML="⚠️ أدخل البيانات";
+return;
+}
+
+let m=(P*r)/(1-Math.pow(1+r,-n));
+let total=m*n;
+
+res2.innerHTML=`
+<div class="box">💳 ${m.toFixed(0)} شهري</div>
+<div class="box">📊 ${total.toFixed(0)} إجمالي</div>
+`;
+
+localStorage.setItem("loan",res2.innerHTML);
 }
 </script>
 
